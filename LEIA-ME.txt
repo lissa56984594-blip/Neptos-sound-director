@@ -1,0 +1,28 @@
+NEPTUS SOUND DIRECTOR — PRIMEIRA BASE FUNCIONAL
+
+Como abrir:
+1. Extraia o arquivo ZIP.
+2. Abra index.html em um navegador moderno para testar a interface.
+3. Para publicar, envie o conteúdo da pasta para um serviço de hospedagem estática, como Netlify.
+
+O que já funciona nesta base:
+- Navegação entre as áreas.
+- Criar, renomear, duplicar e excluir sessões.
+- Criar, renomear e excluir cenas.
+- Importar músicas e efeitos de áudio.
+- Biblioteca central de músicas.
+- Associar músicas às cenas e organizar a ordem.
+- Reproduzir múltiplos áudios simultaneamente.
+- Mixer fixo com pausa, retomada, parada e volume individual.
+- Salvar os arquivos de áudio no IndexedDB do navegador.
+- Exportar/importar backup dos metadados das sessões.
+
+Limitações desta primeira versão:
+- A IA ainda não está integrada.
+- Reconhecimento da voz do narrador e modo combate ainda não estão implementados.
+- Os efeitos pré-instalados licenciados ainda precisam ser adicionados.
+- O backup exportado atualmente salva sessões e organização, mas não inclui os arquivos de áudio.
+- Reprodução em segundo plano e com tela bloqueada precisa ser testada no Android; um site comum não garante isso.
+- Os dados locais podem ser apagados se os dados do navegador forem limpos. Mantenha cópias dos arquivos originais.
+
+Esta é uma primeira fundação funcional, não a versão final do produto.
