@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b20">
+<title>Neptus Sound Director</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="cenas.css">
+</head>
+<body>
+<header>
+ <div class="brand"><div class="sigil">✦</div><div><h1>NEPTUS</h1><p>SOUND DIRECTOR · SUA TRILHA, SUA HISTÓRIA</p></div></div>
+ <nav id="nav">
+  <button class="active" data-page="inicio"><span>✧</span> Início</button>
+  <button data-page="cenas"><span>◈</span> Cenas</button>
+  <button data-page="efeitos"><span>ϟ</span> Efeitos</button>
+  <button data-page="biblioteca"><span>♫</span> Biblioteca</button>
+  <button data-page="assistente"><span>✦</span> Adelaide</button>
+  <button data-page="config"><span>⚙</span> Configurações</button>
+ </nav>
+ <div class="sidebar-note">✧<br><em>Que a trilha certa conduza sua história.</em></div>
+</header>
+<main>
+<section class="page active" id="inicio">
+ <div class="home-hero">
+  <div class="hero-copy"><span class="eyebrow">CENTRAL DE COMANDO SONORA</span><h2>Suas histórias.<br><em>Uma trilha inesquecível.</em></h2><p>Prepare ambientes, organize cenas e conduza a experiência sonora da sua aventura.</p><div class="actions"><button class="primary" data-go="cenas">Abrir minhas cenas <span>↗</span></button><button class="secondary" data-go="biblioteca">Explorar biblioteca</button></div></div>
+  <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="star-core">✦</div><div class="hero-caption">NEPTUS<br><small>SOUND DIRECTOR</small></div></div>
+ </div>
+ <div class="dashboard-heading"><div><span class="eyebrow">VISÃO GERAL</span><h2>Seu universo sonoro</h2></div><span class="live-indicator"><i></i> Painel local</span></div>
+ <div class="stats-grid">
+  <article class="stat-card stat-scenes"><span class="stat-icon">◈</span><span class="stat-label">Sessões criadas</span><strong id="homeSessions">0</strong><small>Suas aventuras organizadas</small></article>
+  <article class="stat-card stat-music"><span class="stat-icon">♫</span><span class="stat-label">Faixas na biblioteca</span><strong id="homeMusic">0</strong><small>Músicas importadas por você</small></article>
+  <article class="stat-card stat-effects"><span class="stat-icon">ϟ</span><span class="stat-label">Efeitos sonoros</span><strong id="homeEffects">0</strong><small>Sons prontos para usar</small></article>
+  <article class="stat-card stat-playing"><span class="stat-icon">◉</span><span class="stat-label">Áudios ativos</span><strong id="homeActive">0</strong><small>Reproduções neste momento</small></article>
+ </div>
+ <div class="home-columns">
+  <article class="feature-card"><div class="feature-top"><span class="feature-symbol">♫</span><span class="eyebrow">SUA CENTRAL MUSICAL</span></div><h3>Biblioteca</h3><p>Encontre e organize as trilhas que dão vida ao seu mundo.</p><button class="text-action" data-go="biblioteca">Ir para biblioteca →</button></article>
+  <article class="feature-card"><div class="feature-top"><span class="feature-symbol">ϟ</span><span class="eyebrow">DETALHES QUE CONTAM</span></div><h3>Efeitos sonoros</h3><p>Adicione passos, impactos, magia e sons de ambiente.</p><button class="text-action" data-go="efeitos">Abrir efeitos →</button></article>
+  <article class="feature-card feature-adelaide"><div class="feature-top"><span class="feature-symbol">✦</span><span class="eyebrow">SUA COMPANHEIRA DE MESA</span></div><h3>Adelaide</h3><p>Conheça a assistente que está sendo preparada para ajudar na direção sonora.</p><button class="text-action" data-go="assistente">Conhecer Adelaide →</button></article>
+ </div>
+</section>
+<section class="page" id="cenas">
+ <div class="heading"><div><h2>Cenas</h2><p class="sub">Organize suas sessões, cenas e trilhas sonoras em um só lugar.</p></div><button class="primary" id="newSession">+ Nova sessão</button></div>
+ <div id="sessions" class="grid"></div><div id="sessionDetail"></div>
+</section>
+<section class="page page-effects" id="efeitos">
+ <div class="heading"><div><h2>Efeitos sonoros</h2><p class="sub">Seus efeitos ficam disponíveis em qualquer sessão.</p></div><label class="filebtn primary" for="effectFiles">+ Importar efeitos</label><input id="effectFiles" type="file" accept="audio/*" multiple></div>
+ <div class="notice">Esta versão inicial permite importar seus próprios efeitos. A coleção pré-instalada com arquivos licenciados será adicionada numa etapa seguinte, sem apresentar sons inexistentes como disponíveis.</div>
+ <div id="effectsList" class="stack"></div>
+</section>
+<section class="page page-library" id="biblioteca">
+ <div class="heading"><div><h2>Biblioteca musical</h2><p class="sub">Importe uma vez e use suas músicas em várias sessões.</p></div><label class="filebtn primary" for="musicFiles">+ Importar músicas</label><input id="musicFiles" type="file" accept="audio/*" multiple></div>
+ <div class="field"><label for="musicSearch">Pesquisar na biblioteca</label><input id="musicSearch" placeholder="Nome da música..."></div>
+ <div id="musicList" class="stack"></div>
+</section>
+<section class="page page-assistant" id="assistente">
+ <div class="heading"><div><h2>Neptus Assistant</h2><p class="sub">Sua ajudante de preparação sonora.</p></div><span class="pill">Em preparação</span></div>
+ <div class="adelaide-panel"><div class="adelaide-avatar"><span>✦</span></div><div class="adelaide-content"><span class="eyebrow">ADelaide · ASSISTENTE DE MESA</span><h3>Olá, narrador.</h3><p>Sou Adelaide. Estou sendo preparada para ajudar você a construir a atmosfera sonora de cada cena.</p><div class="adelaide-status"><i></i> Núcleo de assistência em preparação</div></div></div><div class="card assistant-details"><h3>Assistente inteligente</h3><p>A integração com IA, cadastro da voz do narrador, modo narrador e modo combate serão desenvolvidos em uma etapa posterior. Por enquanto, você já pode preparar suas músicas e cenas manualmente.</p><div class="notice">Durante a sessão, a assistente deverá trabalhar somente com as músicas escolhidas para aquela sessão. Nenhuma troca automática será ativada nesta versão.</div></div>
+</section>
+<section class="page page-settings" id="config">
+ <div class="heading"><div><h2>Configurações</h2><p class="sub">Dados guardados neste navegador.</p></div></div>
+ <div class="card"><h3>Backup dos dados</h3><p>Exporte ou restaure a lista de sessões e configurações. Os arquivos de áudio precisam de backup separado nesta versão.</p><div class="actions"><button class="secondary" id="exportData">Exportar dados</button><label class="filebtn secondary" for="importData">Importar dados</label><input id="importData" type="file" accept="application/json"></div></div>
+ <div class="card" style="margin-top:12px"><h3>Sobre o armazenamento</h3><p>As informações e os áudios importados ficam salvos no armazenamento local deste navegador. Limpar os dados do navegador pode apagá-los. Faça cópias de segurança e evite usar modo anônimo.</p></div>
+</section>
+</main>
+<footer>NEPTUS SOUND DIRECTOR <span>✦</span> Sua trilha sonora, do seu jeito.</footer>
+<div class="mixer">
+ <div class="mixerinner">
+  <div class="mixhead"><strong>♫ MIXER · <span id="activeCount">0</span> áudios ativos</strong><div class="actions"><button class="secondary" id="pauseAll">Pausar todos</button><button class="danger" id="stopAll">Parar todos</button><button class="secondary" id="expandMixer">⌃ Mixer</button></div></div>
+  <div class="activeaudios" id="activeAudios"><span class="sub">Nenhum áudio tocando.</span></div>
+  <div class="expanded" id="expandedMixer"></div>
+ </div>
+</div>
+<script src="core.js" defer></script>
+<script src="cenas.js" defer></script>
+<script src="biblioteca.js" defer></script>
+<script src="efeitos.js" defer></script>
+<script src="mixer.js" defer></script>
+<script src="adelaide.js" defer></script>
+<script src="config.js" defer></script>
+</body></html>

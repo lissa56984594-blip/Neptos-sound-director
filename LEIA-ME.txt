@@ -1,28 +1,26 @@
-NEPTUS SOUND DIRECTOR — PRIMEIRA BASE FUNCIONAL
+NEPTUS SOUND DIRECTOR — VERSÃO MODULAR ESTELAR
 
-Como abrir:
-1. Extraia o arquivo ZIP.
-2. Abra index.html em um navegador moderno para testar a interface.
-3. Para publicar, envie o conteúdo da pasta para um serviço de hospedagem estática, como Netlify.
+ESTRUTURA
+- index.html: página principal; continua sendo a entrada do site.
+- styles.css: identidade visual geral e estilos já existentes.
+- cenas.css / cenas.js: visual e funcionamento da área Cenas.
+- core.js: armazenamento, navegação, estado compartilhado e serviços comuns.
+- biblioteca.js: importação, pesquisa e organização da Biblioteca.
+- efeitos.js: importação e reprodução dos efeitos sonoros.
+- mixer.js: controles do mixer persistente.
+- adelaide.js: preparação da área da Adelaide (a IA ainda não está conectada).
+- config.js: backup e restauração dos dados das sessões.
 
-O que já funciona nesta base:
-- Navegação entre as áreas.
-- Criar, renomear, duplicar e excluir sessões.
-- Criar, renomear e excluir cenas.
-- Importar músicas e efeitos de áudio.
-- Biblioteca central de músicas.
-- Associar músicas às cenas e organizar a ordem.
-- Reproduzir múltiplos áudios simultaneamente.
-- Mixer fixo com pausa, retomada, parada e volume individual.
-- Salvar os arquivos de áudio no IndexedDB do navegador.
-- Exportar/importar backup dos metadados das sessões.
+INSTALAÇÃO
+1. Faça uma cópia de segurança do repositório atual.
+2. Envie TODOS os arquivos desta pasta para a raiz do repositório, mantendo os nomes.
+3. Quando o GitHub perguntar, substitua o index.html e styles.css existentes.
+4. Não apague a pasta antiga nem o README; eles não são necessários para carregar o site.
+5. Aguarde o GitHub Pages atualizar e abra o site. Se aparecer a versão antiga, atualize a página.
 
-Limitações desta primeira versão:
-- A IA ainda não está integrada.
-- Reconhecimento da voz do narrador e modo combate ainda não estão implementados.
-- Os efeitos pré-instalados licenciados ainda precisam ser adicionados.
-- O backup exportado atualmente salva sessões e organização, mas não inclui os arquivos de áudio.
-- Reprodução em segundo plano e com tela bloqueada precisa ser testada no Android; um site comum não garante isso.
-- Os dados locais podem ser apagados se os dados do navegador forem limpos. Mantenha cópias dos arquivos originais.
-
-Esta é uma primeira fundação funcional, não a versão final do produto.
+IMPORTANTE
+- A Biblioteca e os efeitos continuam usando o armazenamento local do navegador (IndexedDB).
+- As sessões continuam usando a chave localStorage nsd_sessions; a organização já salva deverá continuar disponível no mesmo navegador.
+- Os arquivos de áudio não são enviados ao GitHub; permanecem no armazenamento local do navegador.
+- Faça backup dos dados e mantenha os arquivos originais de áudio guardados no celular.
+- Esta versão não conecta uma IA real à Adelaide.
