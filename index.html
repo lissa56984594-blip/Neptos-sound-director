@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b20">
+<title>Neptus Sound Director</title>
+<style>
+:root{--bg:#0d1018;--panel:#171c29;--panel2:#202738;--line:#30394d;--gold:#d6b56d;--text:#f1f0ec;--muted:#a6adbd;--blue:#829ccf;--red:#d16e72}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1a2234 0,#0d1018 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;padding-bottom:120px}
+header{padding:20px 16px 14px;border-bottom:1px solid var(--line);background:#101521eF;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:12px;max-width:1100px;margin:auto}.sigil{width:42px;height:42px;border:1px solid var(--gold);border-radius:12px;display:grid;place-items:center;color:var(--gold);font-size:22px}.brand h1{font-size:18px;letter-spacing:.08em;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+nav{display:flex;gap:8px;overflow:auto;padding:12px 14px;max-width:1100px;margin:auto;scrollbar-width:none}nav button{white-space:nowrap;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:9px 14px}nav button.active{background:#3a3440;border-color:var(--gold);color:var(--text)}
+main{max-width:1100px;margin:0 auto;padding:12px 14px}.page{display:none}.page.active{display:block}.heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0 18px}.heading h2{margin:0;font-size:22px}.sub{color:var(--muted);font-size:13px;margin:5px 0 0}
+button,.filebtn{cursor:pointer;font:inherit}.primary{background:var(--gold);color:#171717;border:0;border-radius:10px;padding:10px 14px;font-weight:700}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px 12px}.danger{background:#3a2028;color:#ffd8d8;border:1px solid #75414a;border-radius:10px;padding:8px 10px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.card{background:linear-gradient(145deg,#1b2231,#141925);border:1px solid var(--line);border-radius:15px;padding:15px}.card h3{margin:0 0 7px;font-size:16px}.card p{color:var(--muted);margin:0 0 12px;font-size:13px}.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.between{justify-content:space-between}.stack{display:grid;gap:10px}.item{display:flex;align-items:center;gap:10px;padding:11px;background:#111724;border:1px solid var(--line);border-radius:12px}.item .info{flex:1;min-width:0}.item strong{display:block;overflow-wrap:anywhere}.item small{color:var(--muted)}.empty{border:1px dashed #47516a;border-radius:14px;padding:24px;text-align:center;color:var(--muted)}input,select{background:#101623;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:10px;max-width:100%}input[type=file]{display:none}.field{display:grid;gap:6px;margin:10px 0}.field label{font-size:12px;color:var(--muted)}.actions{display:flex;gap:7px;flex-wrap:wrap}.pill{font-size:11px;color:var(--gold);border:1px solid #6d5b37;border-radius:99px;padding:3px 8px}
+#sessionDetail{margin-top:14px}.scene{margin:10px 0}.trackline{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 0;border-top:1px solid #2b3447}.trackline span{flex:1;min-width:120px}
+.mixer{position:fixed;z-index:10;bottom:0;left:0;right:0;background:#111724f5;border-top:1px solid var(--gold);backdrop-filter:blur(14px);padding:10px 12px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -8px 30px #0008}.mixerinner{max-width:1100px;margin:auto}.mixhead{display:flex;justify-content:space-between;align-items:center;gap:10px}.mixhead strong{font-size:13px}.activeaudios{display:flex;gap:8px;overflow-x:auto;padding:8px 0 2px}.audiochip{display:flex;align-items:center;gap:7px;flex:0 0 auto;min-width:210px;white-space:nowrap;background:#252e40;border:1px solid #46516a;border-radius:10px;padding:8px 9px;font-size:12px}.audiochip button{background:transparent;border:0;color:white;padding:4px 6px;border-radius:7px}.audiochip button:active{background:#46516a}.audiochip .chipname{max-width:100px;overflow:hidden;text-overflow:ellipsis}.audiochip input{width:64px;padding:0;accent-color:var(--gold)}.expanded{display:none;padding-top:8px}.expanded.show{display:grid;gap:8px}.mixrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:#1a2231;padding:9px;border-radius:10px}.mixrow input{grid-column:1/-1;width:100%;padding:0}
+.notice{background:#282538;border:1px solid #514765;border-radius:12px;padding:12px;color:#d8d0e8;font-size:13px;margin:12px 0}
+footer{color:#788196;text-align:center;font-size:11px;padding:25px}
+@media(min-width:700px){header{padding-top:24px}nav{padding-top:14px}main{padding:22px 18px}.heading h2{font-size:26px}}
+
+/* NEPTUS VISUAL REFRESH — azul, violeta e preto */
+:root{
+ --bg:#080a16;--panel:#11172a;--panel2:#1a2340;--line:#303b63;
+ --gold:#9b83f5;--text:#f3f2ff;--muted:#a9b2d0;--blue:#58b8f5;--red:#ed718b;
+ --violet:#7656d8;--glow:rgba(102,128,255,.18)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+ background:radial-gradient(ellipse at 12% -8%,rgba(63,91,190,.27),transparent 38%),
+ radial-gradient(ellipse at 92% 12%,rgba(111,57,181,.2),transparent 34%),
+ linear-gradient(160deg,#090c1b 0%,#080a16 58%,#0d1022 100%);
+ color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+ letter-spacing:.01em;padding-bottom:150px
+}
+header{
+ background:rgba(9,12,27,.88);border-bottom:1px solid rgba(119,139,220,.22);
+ box-shadow:0 10px 35px rgba(0,0,0,.2);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)
+}
+.brand{gap:13px;padding:2px 2px}
+.sigil{
+ width:46px;height:46px;border-radius:15px;border:1px solid rgba(156,132,255,.65);
+ color:#c5b7ff;background:linear-gradient(145deg,rgba(93,117,232,.24),rgba(118,73,194,.2));
+ box-shadow:0 0 25px rgba(112,100,240,.18),inset 0 0 18px rgba(130,112,255,.12);font-size:24px
+}
+.brand h1{font-size:clamp(15px,3vw,19px);letter-spacing:.12em;font-weight:800;background:linear-gradient(90deg,#fff,#b9caff 55%,#c7aaff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand p{font-size:12px;color:#aab5d8}
+nav{gap:8px;padding-top:13px;padding-bottom:13px}
+nav button{
+ border:1px solid rgba(116,132,197,.25);border-radius:12px;padding:10px 15px;
+ color:#aeb8d8;background:rgba(22,29,54,.62);font-weight:650;transition:all .18s ease
+}
+nav button:hover{border-color:rgba(128,151,255,.65);color:#fff;background:rgba(62,76,137,.3)}
+nav button.active{
+ color:#fff;border-color:#8c7bf0;background:linear-gradient(120deg,rgba(69,112,211,.36),rgba(117,73,190,.42));
+ box-shadow:0 0 0 1px rgba(141,124,255,.13),0 7px 22px rgba(66,74,170,.2)
+}
+main{padding-top:20px}
+.heading{margin:15px 0 20px;align-items:center}
+.heading h2{font-size:clamp(22px,4vw,28px);letter-spacing:-.025em;font-weight:800}
+.sub{color:#a8b2d2;line-height:1.55}
+button,.filebtn{transition:transform .16s ease,filter .16s ease,border-color .16s ease,background .16s ease}
+button:active,.filebtn:active{transform:scale(.97)}
+.primary{
+ color:#fff;background:linear-gradient(120deg,#477fe0,#7656d8);border:1px solid rgba(176,183,255,.38);
+ border-radius:12px;padding:11px 16px;font-weight:750;box-shadow:0 7px 20px rgba(73,93,206,.25)
+}
+.primary:hover{filter:brightness(1.12);box-shadow:0 9px 24px rgba(86,103,222,.34)}
+.secondary{
+ color:#e5e9ff;background:linear-gradient(145deg,#202b4c,#171f39);border:1px solid #3b4a78;
+ border-radius:11px;padding:9px 13px
+}
+.secondary:hover{border-color:#8195ed;background:#26345c}
+.danger{color:#ffdce4;background:linear-gradient(145deg,#48243b,#321c32);border:1px solid #82445e;border-radius:11px;padding:9px 12px}
+.grid{gap:14px}
+.card{
+ background:linear-gradient(145deg,rgba(25,34,64,.94),rgba(15,20,40,.96));
+ border:1px solid rgba(106,125,194,.3);border-radius:18px;padding:17px;
+ box-shadow:0 12px 28px rgba(0,0,0,.16);position:relative;overflow:hidden
+}
+.card:before{content:"";position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,rgba(142,157,255,.45),transparent);pointer-events:none}
+.card h3{font-size:16px;font-weight:750;color:#f1f2ff}
+.card p{color:#adb7d5;line-height:1.6}
+.item{background:linear-gradient(110deg,rgba(20,29,54,.96),rgba(16,22,43,.96));border:1px solid rgba(91,110,174,.32);border-radius:13px;padding:12px}
+.item:hover{border-color:rgba(117,145,238,.62)}
+.item small{color:#aab5d4}
+.empty{border:1px dashed #59689c;background:rgba(19,27,53,.45);color:#aeb9d8}
+input,select{background:#0d1429;color:#f3f2ff;border:1px solid #3a4977;border-radius:10px;min-height:42px}
+input:focus,select:focus{outline:2px solid rgba(103,153,255,.3);border-color:#6e9af2}
+input::placeholder{color:#7885aa}
+.field label{color:#b4bfdf;font-weight:650}
+.pill{color:#c9c0ff;border:1px solid #6556a9;background:rgba(102,78,190,.16);padding:4px 9px}
+.notice{background:linear-gradient(110deg,rgba(43,52,103,.52),rgba(54,36,92,.4));border:1px solid rgba(126,112,211,.45);color:#d9dcff;border-radius:14px;line-height:1.55}
+.trackline{border-top-color:rgba(105,123,186,.28)}
+.mixer{
+ background:rgba(9,13,29,.96);border-top:1px solid rgba(128,119,236,.62);
+ box-shadow:0 -12px 38px rgba(0,0,0,.42),0 -2px 22px rgba(71,82,187,.12);
+ backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)
+}
+.mixhead strong{color:#d9ddff;letter-spacing:.035em}
+.activeaudios{scrollbar-width:thin;scrollbar-color:#6656bd #151c35;padding:9px 2px 5px}
+.activeaudios::-webkit-scrollbar{height:5px}.activeaudios::-webkit-scrollbar-thumb{background:#6656bd;border-radius:8px}
+.audiochip{
+ background:linear-gradient(120deg,#202d52,#29234c);border:1px solid #4b5d98;border-radius:12px;
+ box-shadow:inset 0 1px rgba(255,255,255,.04);padding:9px 10px
+}
+.audiochip button:hover{background:rgba(119,139,232,.22);color:#dcd5ff}
+.audiochip input{accent-color:#8f7cf0}
+.mixrow{background:linear-gradient(110deg,#1a2545,#211d3d);border:1px solid #394a7d;border-radius:12px}
+.mixrow input{accent-color:#8f7cf0}
+footer{color:#7683aa}
+@media(max-width:600px){
+ body{padding-bottom:165px}
+ header{padding:14px 12px 8px}
+ .brand{gap:10px}.sigil{width:41px;height:41px;border-radius:13px}
+ nav{margin:0 -2px;padding:11px 2px;gap:7px}
+ nav button{padding:10px 12px;font-size:13px}
+ main{padding:10px 12px}
+ .heading{align-items:flex-start;flex-wrap:wrap}
+ .heading h2{font-size:23px}
+ .heading>.primary,.heading>.filebtn{margin-left:auto}
+ .card{padding:15px;border-radius:16px}
+ .mixer{padding:9px 10px calc(9px + env(safe-area-inset-bottom))}
+ .mixhead{align-items:flex-start;flex-wrap:wrap}
+ .mixhead .actions{gap:5px}
+ .mixhead .actions button{font-size:11px;padding:7px 8px}
+ .audiochip{min-width:205px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+
+/* ESTELAR PERSONALIZADO · composição própria para cada área */
+:root{--bg:#050817;--panel:#0d1430;--panel2:#151d43;--line:rgba(137,139,255,.28);--gold:#b9a0ff;--text:#f4f2ff;--muted:#a9afd2;--blue:#65d9ff;--violet:#8d5cff;--glow:rgba(104,91,255,.25)}
+body{background:radial-gradient(ellipse at 75% 0%,rgba(52,67,166,.24),transparent 35%),radial-gradient(ellipse at 20% 60%,rgba(85,43,153,.13),transparent 40%),#050817;color:var(--text);padding-bottom:155px}
+header{background:linear-gradient(180deg,rgba(8,12,34,.98),rgba(7,10,27,.96));border-bottom:1px solid var(--line)}
+.brand{padding:8px 5px 18px}.sigil{border-radius:50%;font-size:25px;color:#d8d0ff;border-color:#817aff;background:radial-gradient(circle,#373078,#11152f 70%);box-shadow:0 0 24px #665aff55}
+.brand h1{letter-spacing:.18em}.brand p{font-size:9px;letter-spacing:.12em}
+nav button{border-radius:12px;background:transparent;border-color:transparent;text-align:left;display:flex;align-items:center;gap:12px;padding:12px 14px;font-size:14px}
+nav button span{width:22px;text-align:center;font-size:19px;color:#9e9aff}nav button.active{background:linear-gradient(100deg,#302b72aa,#16244a99);border-color:#817aff66;box-shadow:inset 3px 0 #a995ff,0 5px 20px #5143c522}
+.sidebar-note{display:none;color:#8f91c1;text-align:center;font-family:Georgia,serif;font-size:22px;padding:20px 18px;margin-top:auto}.sidebar-note em{font-size:13px;line-height:1.7}
+main{max-width:1440px}.page{animation:pageIn .28s ease both}@keyframes pageIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.heading h2{font-family:Georgia,serif;font-weight:500;letter-spacing:.01em}.sub{color:#aeb5d8}
+.card{background:linear-gradient(145deg,rgba(17,25,57,.96),rgba(8,13,34,.98));border-color:rgba(126,127,232,.3);box-shadow:0 15px 35px #0003}.card:before{background:linear-gradient(90deg,transparent,#a49aff88,transparent)}
+.primary{background:linear-gradient(110deg,#6358e8,#a15ce7);border-color:#c3aaff66;box-shadow:0 7px 24px #7455eb44}.secondary{background:#111b3b;border-color:#424b83}.danger{background:#351d3c;border-color:#804b86}
+/* Início: dashboard panorâmico */
+.home-hero{min-height:310px;border:1px solid #7770dc66;border-radius:25px;overflow:hidden;position:relative;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;padding:clamp(22px,4vw,48px);background:radial-gradient(circle at 78% 48%,#4a3a9b66,transparent 34%),linear-gradient(115deg,#111b43,#090e29 60%,#17103a);box-shadow:0 20px 60px #0005;margin:6px 0 30px}
+.home-hero:after{content:"";position:absolute;inset:0;background-image:radial-gradient(#fff 0.7px,transparent .8px);background-size:31px 31px;opacity:.22;pointer-events:none}.hero-copy{position:relative;z-index:2;max-width:590px}.eyebrow{font-size:10px;letter-spacing:.2em;color:#9c9df4;font-weight:800}.hero-copy h2{font:500 clamp(29px,4.5vw,54px)/1.1 Georgia,serif;margin:14px 0}.hero-copy h2 em{color:#c5aaff}.hero-copy p{color:#b6bddc;max-width:480px;line-height:1.7}.hero-art{height:245px;position:relative;display:grid;place-items:center}.star-core{font-size:95px;color:#d7d2ff;text-shadow:0 0 20px #9b7dff,0 0 60px #7b6bff;z-index:1}.orbit{position:absolute;border:1px solid #a59bff66;border-radius:50%;width:220px;height:220px;transform:rotate(-28deg) scaleY(.45)}.orbit-two{width:290px;height:290px;transform:rotate(50deg) scaleY(.38);border-color:#62cfff55}.hero-caption{position:absolute;bottom:4px;right:8%;font:italic 17px Georgia,serif;color:#d4c9ff;letter-spacing:.18em;text-align:center}.hero-caption small{font:9px system-ui;letter-spacing:.25em}.dashboard-heading{display:flex;align-items:end;justify-content:space-between;margin:8px 2px 14px}.dashboard-heading h2{font:500 25px Georgia,serif;margin:5px 0}.live-indicator,.adelaide-status{font-size:11px;color:#aab3d6}.live-indicator i,.adelaide-status i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#64e5b0;box-shadow:0 0 10px #64e5b0;margin-right:6px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.stat-card{border:1px solid #7774cf55;border-radius:18px;padding:18px;background:linear-gradient(145deg,#151d43,#0a102b);display:grid;gap:5px;min-height:142px}.stat-icon{font-size:22px;color:#b7a1ff}.stat-label{font-size:12px;color:#aeb7dc}.stat-card strong{font:500 30px Georgia,serif}.stat-card small{font-size:10px;color:#828caf}.stat-music .stat-icon{color:#73dfff}.stat-effects .stat-icon{color:#ffbd8b}.stat-playing .stat-icon{color:#8be4c3}.home-columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}.feature-card{padding:20px;border:1px solid #6e72c655;border-radius:18px;background:linear-gradient(145deg,#131d40,#0a1028);min-height:180px}.feature-top{display:flex;align-items:center;gap:10px}.feature-symbol{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#6659b533;color:#c4b6ff;font-size:20px}.feature-card h3{font:500 22px Georgia,serif;margin:15px 0 5px}.feature-card p{font-size:12px;color:#aeb7d7;line-height:1.6}.text-action{background:none;border:0;color:#c4b4ff;font-weight:700;padding:5px 0}.feature-adelaide{background:linear-gradient(145deg,#211744,#0c112e)}
+/* Cenas: cartões de campanha e sequência */
+#cenas .heading{padding:20px 22px;border-radius:18px;background:linear-gradient(100deg,#171d49,#0c122d);border:1px solid #7771c755}#sessions{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}#sessions .card{background:linear-gradient(145deg,#202052,#101735);border-color:#7774d477}#sessionDetail{padding-top:10px}#sceneList .scene{border-left:3px solid #9b82ff;background:linear-gradient(110deg,#171d43,#0b122c)}
+/* Efeitos: soundboard visual */
+.page-effects .heading{padding-bottom:17px;border-bottom:1px solid #8b79e344}.page-effects .notice{background:#171a3b;border-color:#6f66bd66}.page-effects #effectsList{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:12px}.page-effects .item{min-height:115px;align-items:flex-start;flex-wrap:wrap;background:linear-gradient(145deg,#21173f,#10152f);border-color:#9b68bd55}.page-effects .item .info{flex-basis:100%}.page-effects .item:before{content:"ϟ";font-size:24px;color:#c39aff}
+/* Biblioteca: catálogo limpo e pesquisável */
+.page-library .heading{padding:22px;border-radius:18px;background:linear-gradient(100deg,#102a48,#111637);border:1px solid #5fafe766}.page-library .field{max-width:600px;margin:18px 0}.page-library #musicList .item{background:linear-gradient(100deg,#10223c,#10162f);border-left:3px solid #5ac9ed;padding:15px}.page-library #musicList .item .info:before{content:"♫";float:left;margin-right:12px;color:#72dfff;font-size:24px}
+/* Adelaide: área de personagem própria */
+.page-assistant .heading{padding:18px 22px;border-radius:18px;background:radial-gradient(circle at 90% 40%,#6846a955,transparent 38%),#121432;border:1px solid #9c78db66}.adelaide-panel{display:grid;grid-template-columns:190px 1fr;align-items:center;gap:24px;padding:26px;border-radius:22px;border:1px solid #9674d877;background:radial-gradient(circle at 15% 45%,#7750a844,transparent 36%),linear-gradient(120deg,#21163e,#10152f);min-height:245px}.adelaide-avatar{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;margin:auto;background:radial-gradient(circle,#b9a1ff55,#5140a633 42%,transparent 70%);border:1px solid #c2a2ff88;box-shadow:0 0 45px #9065e944}.adelaide-avatar span{font-size:76px;color:#d8caff;text-shadow:0 0 28px #ad7bff}.adelaide-content h3{font:500 30px Georgia,serif;margin:10px 0}.adelaide-content p{max-width:650px;color:#c1bddc;line-height:1.7}.assistant-details{margin-top:15px}.adelaide-status{margin-top:16px}
+/* Configurações: utilidades agrupadas */
+.page-settings .heading{padding:12px 4px 18px;border-bottom:1px solid #8b79e344}.page-settings .card{max-width:850px;margin:14px 0!important;padding:22px}.page-settings .card h3{font:500 21px Georgia,serif}
+/* Mixer persistente */
+.mixer{background:rgba(5,9,26,.97);border-top:1px solid #9d8aff88;box-shadow:0 -12px 40px #0008}.mixhead strong{letter-spacing:.12em;color:#d2c8ff}.audiochip{background:linear-gradient(100deg,#1b2450,#241744);border-color:#7168c5}.audiochip input,.mixrow input{accent-color:#a98bff}
+footer{padding:25px 10px 35px;letter-spacing:.12em}footer span{color:#b6a0ff}
+@media(min-width:900px){
+ body{padding-left:245px;padding-bottom:145px}header{position:fixed;left:0;top:0;bottom:0;width:225px;height:100vh;padding:24px 16px;display:flex;flex-direction:column;border-right:1px solid var(--line);border-bottom:0;z-index:20}nav{display:flex;flex-direction:column;padding:22px 0;gap:7px;width:100%}nav button{width:100%}.sidebar-note{display:block}main{padding:28px 30px 20px;max-width:1500px}.mixer{left:245px}.home-hero{min-height:340px}.hero-art{height:280px}
+}
+@media(max-width:700px){.home-hero{grid-template-columns:1fr;min-height:0;padding:24px 20px}.hero-art{height:125px;opacity:.85}.star-core{font-size:60px}.orbit{width:160px;height:160px}.orbit-two{width:210px;height:210px}.hero-caption{right:12%;bottom:-2px;font-size:12px}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-card{min-height:125px;padding:14px}.home-columns{grid-template-columns:1fr}.adelaide-panel{grid-template-columns:1fr;text-align:center;padding:22px 18px}.adelaide-avatar{width:105px;height:105px}.adelaide-avatar span{font-size:55px}.adelaide-content h3{font-size:25px}.dashboard-heading h2{font-size:22px}.page-effects #effectsList{grid-template-columns:1fr}}
+@media(max-width:380px){.stats-grid{gap:8px}.stat-card{padding:11px}.stat-card strong{font-size:25px}.home-hero .actions{align-items:stretch;flex-direction:column}.home-hero .actions button{width:100%}}
+
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="sigil">✦</div><div><h1>NEPTUS</h1><p>SOUND DIRECTOR · SUA TRILHA, SUA HISTÓRIA</p></div></div>
+ <nav id="nav">
+  <button class="active" data-page="inicio"><span>✧</span> Início</button>
+  <button data-page="cenas"><span>◈</span> Cenas</button>
+  <button data-page="efeitos"><span>ϟ</span> Efeitos</button>
+  <button data-page="biblioteca"><span>♫</span> Biblioteca</button>
+  <button data-page="assistente"><span>✦</span> Adelaide</button>
+  <button data-page="config"><span>⚙</span> Configurações</button>
+ </nav>
+ <div class="sidebar-note">✧<br><em>Que a trilha certa conduza sua história.</em></div>
+</header>
+<main>
+<section class="page active" id="inicio">
+ <div class="home-hero">
+  <div class="hero-copy"><span class="eyebrow">CENTRAL DE COMANDO SONORA</span><h2>Suas histórias.<br><em>Uma trilha inesquecível.</em></h2><p>Prepare ambientes, organize cenas e conduza a experiência sonora da sua aventura.</p><div class="actions"><button class="primary" data-go="cenas">Abrir minhas cenas <span>↗</span></button><button class="secondary" data-go="biblioteca">Explorar biblioteca</button></div></div>
+  <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="star-core">✦</div><div class="hero-caption">NEPTUS<br><small>SOUND DIRECTOR</small></div></div>
+ </div>
+ <div class="dashboard-heading"><div><span class="eyebrow">VISÃO GERAL</span><h2>Seu universo sonoro</h2></div><span class="live-indicator"><i></i> Painel local</span></div>
+ <div class="stats-grid">
+  <article class="stat-card stat-scenes"><span class="stat-icon">◈</span><span class="stat-label">Sessões criadas</span><strong id="homeSessions">0</strong><small>Suas aventuras organizadas</small></article>
+  <article class="stat-card stat-music"><span class="stat-icon">♫</span><span class="stat-label">Faixas na biblioteca</span><strong id="homeMusic">0</strong><small>Músicas importadas por você</small></article>
+  <article class="stat-card stat-effects"><span class="stat-icon">ϟ</span><span class="stat-label">Efeitos sonoros</span><strong id="homeEffects">0</strong><small>Sons prontos para usar</small></article>
+  <article class="stat-card stat-playing"><span class="stat-icon">◉</span><span class="stat-label">Áudios ativos</span><strong id="homeActive">0</strong><small>Reproduções neste momento</small></article>
+ </div>
+ <div class="home-columns">
+  <article class="feature-card"><div class="feature-top"><span class="feature-symbol">♫</span><span class="eyebrow">SUA CENTRAL MUSICAL</span></div><h3>Biblioteca</h3><p>Encontre e organize as trilhas que dão vida ao seu mundo.</p><button class="text-action" data-go="biblioteca">Ir para biblioteca →</button></article>
+  <article class="feature-card"><div class="feature-top"><span class="feature-symbol">ϟ</span><span class="eyebrow">DETALHES QUE CONTAM</span></div><h3>Efeitos sonoros</h3><p>Adicione passos, impactos, magia e sons de ambiente.</p><button class="text-action" data-go="efeitos">Abrir efeitos →</button></article>
+  <article class="feature-card feature-adelaide"><div class="feature-top"><span class="feature-symbol">✦</span><span class="eyebrow">SUA COMPANHEIRA DE MESA</span></div><h3>Adelaide</h3><p>Conheça a assistente que está sendo preparada para ajudar na direção sonora.</p><button class="text-action" data-go="assistente">Conhecer Adelaide →</button></article>
+ </div>
+</section>
+<section class="page" id="cenas">
+ <div class="heading"><div><h2>Cenas</h2><p class="sub">Organize suas sessões e trilhas sonoras.</p></div><button class="primary" id="newSession">+ Nova sessão</button></div>
+ <div id="sessions" class="grid"></div><div id="sessionDetail"></div>
+</section>
+<section class="page page-effects" id="efeitos">
+ <div class="heading"><div><h2>Efeitos sonoros</h2><p class="sub">Seus efeitos ficam disponíveis em qualquer sessão.</p></div><label class="filebtn primary" for="effectFiles">+ Importar efeitos</label><input id="effectFiles" type="file" accept="audio/*" multiple></div>
+ <div class="notice">Esta versão inicial permite importar seus próprios efeitos. A coleção pré-instalada com arquivos licenciados será adicionada numa etapa seguinte, sem apresentar sons inexistentes como disponíveis.</div>
+ <div id="effectsList" class="stack"></div>
+</section>
+<section class="page page-library" id="biblioteca">
+ <div class="heading"><div><h2>Biblioteca musical</h2><p class="sub">Importe uma vez e use suas músicas em várias sessões.</p></div><label class="filebtn primary" for="musicFiles">+ Importar músicas</label><input id="musicFiles" type="file" accept="audio/*" multiple></div>
+ <div class="field"><label for="musicSearch">Pesquisar na biblioteca</label><input id="musicSearch" placeholder="Nome da música..."></div>
+ <div id="musicList" class="stack"></div>
+</section>
+<section class="page page-assistant" id="assistente">
+ <div class="heading"><div><h2>Neptus Assistant</h2><p class="sub">Sua ajudante de preparação sonora.</p></div><span class="pill">Em preparação</span></div>
+ <div class="adelaide-panel"><div class="adelaide-avatar"><span>✦</span></div><div class="adelaide-content"><span class="eyebrow">ADelaide · ASSISTENTE DE MESA</span><h3>Olá, narrador.</h3><p>Sou Adelaide. Estou sendo preparada para ajudar você a construir a atmosfera sonora de cada cena.</p><div class="adelaide-status"><i></i> Núcleo de assistência em preparação</div></div></div><div class="card assistant-details"><h3>Assistente inteligente</h3><p>A integração com IA, cadastro da voz do narrador, modo narrador e modo combate serão desenvolvidos em uma etapa posterior. Por enquanto, você já pode preparar suas músicas e cenas manualmente.</p><div class="notice">Durante a sessão, a assistente deverá trabalhar somente com as músicas escolhidas para aquela sessão. Nenhuma troca automática será ativada nesta versão.</div></div>
+</section>
+<section class="page page-settings" id="config">
+ <div class="heading"><div><h2>Configurações</h2><p class="sub">Dados guardados neste navegador.</p></div></div>
+ <div class="card"><h3>Backup dos dados</h3><p>Exporte ou restaure a lista de sessões e configurações. Os arquivos de áudio precisam de backup separado nesta versão.</p><div class="actions"><button class="secondary" id="exportData">Exportar dados</button><label class="filebtn secondary" for="importData">Importar dados</label><input id="importData" type="file" accept="application/json"></div></div>
+ <div class="card" style="margin-top:12px"><h3>Sobre o armazenamento</h3><p>As informações e os áudios importados ficam salvos no armazenamento local deste navegador. Limpar os dados do navegador pode apagá-los. Faça cópias de segurança e evite usar modo anônimo.</p></div>
+</section>
+</main>
+<footer>NEPTUS SOUND DIRECTOR <span>✦</span> Sua trilha sonora, do seu jeito.</footer>
+<div class="mixer">
+ <div class="mixerinner">
+  <div class="mixhead"><strong>♫ MIXER · <span id="activeCount">0</span> áudios ativos</strong><div class="actions"><button class="secondary" id="pauseAll">Pausar todos</button><button class="danger" id="stopAll">Parar todos</button><button class="secondary" id="expandMixer">⌃ Mixer</button></div></div>
+  <div class="activeaudios" id="activeAudios"><span class="sub">Nenhum áudio tocando.</span></div>
+  <div class="expanded" id="expandedMixer"></div>
+ </div>
+</div>
+<script>
+const DB='neptus-sound-director', STORE='audio';
+let db, sessions=[], library=[], effects=[], active=new Map(), currentSession=null;
+const $=s=>document.querySelector(s);
+function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>{r.result.createObjectStore(STORE,{keyPath:'id'})};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+function saveAudio(item){return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(item);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
+function getAudios(){return new Promise((res,rej)=>{const r=db.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function delAudio(id){return new Promise(res=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=res})}
+function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function persist(){localStorage.setItem('nsd_sessions',JSON.stringify(sessions))}
+function loadMeta(){try{sessions=JSON.parse(localStorage.getItem('nsd_sessions')||'[]')}catch{sessions=[]}}
+function page(name){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===name));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===name));if(name==='inicio')updateHome();}
+$('#nav').addEventListener('click',e=>{const b=e.target.closest('button[data-page]');if(b)page(b.dataset.page)});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)page(b.dataset.go)});
+function updateHome(){const put=(id,n)=>{const el=document.getElementById(id);if(el)el.textContent=n};put('homeSessions',sessions.length);put('homeMusic',library.length);put('homeEffects',effects.length);put('homeActive',active.size);}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderSessions(){
+ updateHome();
+ const root=$('#sessions');root.innerHTML='';
+ if(!sessions.length){root.innerHTML='<div class="empty">Você ainda não criou sessões.<br>Toque em “Nova sessão” para começar.</div>';$('#sessionDetail').innerHTML='';return}
+ sessions.forEach(s=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<h3>${esc(s.name)}</h3><p>${s.scenes.length} cena(s)</p><div class="actions"><button class="secondary" data-open="${s.id}">Abrir sessão</button><button class="secondary" data-rename="${s.id}">Renomear</button><button class="secondary" data-duplicate="${s.id}">Duplicar</button><button class="danger" data-delete="${s.id}">Excluir</button></div>`;root.append(c)});
+ root.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{currentSession=b.dataset.open;renderDetail()});
+ root.querySelectorAll('[data-rename]').forEach(b=>b.onclick=()=>{const s=sessions.find(x=>x.id===b.dataset.rename),n=prompt('Novo nome da sessão:',s.name);if(n?.trim()){s.name=n.trim();persist();renderSessions()}});
+ root.querySelectorAll('[data-duplicate]').forEach(b=>b.onclick=()=>{const s=sessions.find(x=>x.id===b.dataset.duplicate);sessions.push({...JSON.parse(JSON.stringify(s)),id:id(),name:s.name+' (cópia)',scenes:s.scenes.map(x=>({...x,id:id()}))});persist();renderSessions()});
+ root.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{if(confirm('Excluir esta sessão?')){sessions=sessions.filter(x=>x.id!==b.dataset.delete);if(currentSession===b.dataset.delete)currentSession=null;persist();renderSessions()}});
+}
+function renderDetail(){
+ const s=sessions.find(x=>x.id===currentSession);if(!s){$('#sessionDetail').innerHTML='';return}
+ $('#sessionDetail').innerHTML=`<div class="heading"><div><h2>${esc(s.name)}</h2><p class="sub">Cenas desta sessão</p></div><div class="actions"><button class="secondary" id="renameCurrent">Renomear</button><button class="primary" id="addScene">+ Nova cena</button></div></div><div id="sceneList"></div>`;
+ $('#renameCurrent').onclick=()=>{const n=prompt('Nome da sessão:',s.name);if(n?.trim()){s.name=n.trim();persist();renderSessions();renderDetail()}};
+ $('#addScene').onclick=()=>{const n=prompt('Nome da cena:');if(n?.trim()){s.scenes.push({id:id(),name:n.trim(),tracks:[]});persist();renderDetail();renderSessions()}};
+ const root=$('#sceneList');if(!s.scenes.length)root.innerHTML='<div class="empty">Nenhuma cena criada ainda.</div>';
+ s.scenes.forEach(sc=>{const c=document.createElement('div');c.className='card scene';c.innerHTML=`<div class="row between"><div><h3>${esc(sc.name)}</h3><p>${sc.tracks.length} música(s) na cena</p></div><div class="actions"><button class="secondary" data-addtrack="${sc.id}">+ Música</button><button class="secondary" data-renamescene="${sc.id}">Renomear</button><button class="danger" data-delscene="${sc.id}">Excluir</button></div></div><div class="tracklist"></div>`;root.append(c);
+ const list=c.querySelector('.tracklist');sc.tracks.forEach((tid,i)=>{const a=library.find(x=>x.id===tid);if(!a)return;const line=document.createElement('div');line.className='trackline';line.innerHTML=`<span>${i+1}. ${esc(a.name)}</span><button class="secondary" data-play="${a.id}">▶ Tocar</button><button class="secondary" data-up="${i}">↑</button><button class="secondary" data-down="${i}">↓</button><button class="danger" data-remove="${i}">Remover</button>`;list.append(line)});
+ c.querySelectorAll('[data-addtrack]').forEach(b=>b.onclick=()=>{if(!library.length){alert('Importe músicas primeiro na Biblioteca.');return}const opts=library.map((a,i)=>`${i+1}. ${a.name}`).join('\\n');const choice=prompt('Digite o número da música:\\n'+opts);const a=library[Number(choice)-1];if(a){sc.tracks.push(a.id);persist();renderDetail()}});
+ c.querySelectorAll('[data-renamescene]').forEach(b=>b.onclick=()=>{const n=prompt('Nome da cena:',sc.name);if(n?.trim()){sc.name=n.trim();persist();renderDetail()}});
+ c.querySelectorAll('[data-delscene]').forEach(b=>b.onclick=()=>{if(confirm('Excluir esta cena?')){s.scenes=s.scenes.filter(x=>x.id!==sc.id);persist();renderDetail();renderSessions()}});
+ c.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>playAudio(b.dataset.play));
+ c.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{sc.tracks.splice(Number(b.dataset.remove),1);persist();renderDetail()});
+ c.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>{let i=Number(b.dataset.up);if(i>0){[sc.tracks[i-1],sc.tracks[i]]=[sc.tracks[i],sc.tracks[i-1]];persist();renderDetail()}});
+ c.querySelectorAll('[data-down]').forEach(b=>b.onclick=()=>{let i=Number(b.dataset.down);if(i<sc.tracks.length-1){[sc.tracks[i+1],sc.tracks[i]]=[sc.tracks[i],sc.tracks[i+1]];persist();renderDetail()}});
+ });
+}
+$('#newSession').onclick=()=>{const n=prompt('Nome da nova sessão:');if(n?.trim()){const s={id:id(),name:n.trim(),scenes:[]};sessions.push(s);currentSession=s.id;persist();renderSessions();renderDetail()}};
+async function importFiles(files,type){for(const f of files){const item={id:id(),name:f.name.replace(/\.[^.]+$/,''),fileName:f.name,type,blob:f,added:Date.now()};await saveAudio(item);if(type==='music')library.push(item);else effects.push(item)}renderLibrary();renderEffects()}
+function renderLibrary(){updateHome();const root=$('#musicList'),q=$('#musicSearch').value.toLowerCase();root.innerHTML='';const filtered=library.filter(a=>a.name.toLowerCase().includes(q));if(!filtered.length){root.innerHTML='<div class="empty">Nenhuma música encontrada. Importe arquivos de áudio para começar.</div>';return}filtered.forEach(a=>{const el=document.createElement('div');el.className='item';el.innerHTML=`<div class="info"><strong>${esc(a.name)}</strong><small>${esc(a.fileName)}</small></div><button class="secondary" data-play="${a.id}">▶</button><button class="danger" data-del="${a.id}">Excluir</button>`;root.append(el)});root.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>playAudio(b.dataset.play));root.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('Excluir esta música da biblioteca?')){await delAudio(b.dataset.del);library=library.filter(x=>x.id!==b.dataset.del);sessions.forEach(s=>s.scenes.forEach(sc=>sc.tracks=sc.tracks.filter(t=>t!==b.dataset.del)));persist();renderLibrary();renderDetail()}})}
+function renderEffects(){updateHome();const root=$('#effectsList');root.innerHTML='';if(!effects.length){root.innerHTML='<div class="empty">Nenhum efeito importado ainda. Você poderá adicionar seus arquivos de efeitos aqui.</div>';return}effects.forEach(a=>{const el=document.createElement('div');el.className='item';el.innerHTML=`<div class="info"><strong>${esc(a.name)}</strong><small>Efeito sonoro</small></div><button class="secondary" data-play="${a.id}">▶ Tocar</button><button class="secondary" data-loop="${a.id}">↻ Loop</button><button class="danger" data-del="${a.id}">Excluir</button>`;root.append(el)});root.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>playAudio(b.dataset.play));root.querySelectorAll('[data-loop]').forEach(b=>b.onclick=()=>playAudio(b.dataset.loop,true));root.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('Excluir este efeito?')){await delAudio(b.dataset.del);effects=effects.filter(x=>x.id!==b.dataset.del);renderEffects()}})}
+async function playAudio(aid,loop=false){const a=[...library,...effects].find(x=>x.id===aid);if(!a)return;const old=active.get(aid);if(old){old.audio.play();return}const audio=new Audio(URL.createObjectURL(a.blob));audio.loop=loop;audio.volume=0.8;const obj={id:aid,name:a.name,audio,loop};active.set(aid,obj);audio.onended=()=>{if(!audio.loop){active.delete(aid);renderMixer()}};audio.onerror=()=>{active.delete(aid);renderMixer();alert('Não foi possível reproduzir este arquivo.')};await audio.play().catch(()=>alert('O navegador não conseguiu iniciar o áudio. Toque novamente para tentar.'));renderMixer()}
+function stopAudio(aid){const x=active.get(aid);if(x){x.audio.pause();x.audio.currentTime=0;active.delete(aid);renderMixer()}}
+function renderMixer(){
+ updateHome();
+ const root=$('#activeAudios'),exp=$('#expandedMixer');
+ $('#activeCount').textContent=active.size;root.innerHTML='';exp.innerHTML='';
+ if(!active.size)root.innerHTML='<span class="sub">Nenhum áudio tocando.</span>';
+ active.forEach(x=>{
+  const chip=document.createElement('div');chip.className='audiochip';
+  chip.innerHTML=`<button type="button" data-toggle="${x.id}" aria-label="${x.audio.paused?'Retomar':'Pausar'} ${esc(x.name)}">${x.audio.paused?'▶':'Ⅱ'}</button><span class="chipname" title="${esc(x.name)}">${esc(x.name)}</span><input type="range" min="0" max="1" step=".01" value="${x.audio.volume}" aria-label="Volume de ${esc(x.name)}"><button type="button" data-stop="${x.id}" aria-label="Parar ${esc(x.name)}">×</button>`;
+  chip.querySelector('input').oninput=e=>{x.audio.volume=Number(e.target.value);const other=exp.querySelector(`[data-volume="${x.id}"]`);if(other)other.value=e.target.value};
+  root.append(chip);
+  const row=document.createElement('div');row.className='mixrow';
+  row.innerHTML=`<span>${esc(x.name)}${x.audio.paused?' · pausado':' · tocando'}</span><button class="danger" data-stop="${x.id}">Parar</button><input data-volume="${x.id}" type="range" min="0" max="1" step=".01" value="${x.audio.volume}" aria-label="Volume de ${esc(x.name)}">`;
+  row.querySelector('input').oninput=e=>{x.audio.volume=Number(e.target.value);const other=root.querySelector(`[data-toggle="${x.id}"]`)?.parentElement.querySelector('input');if(other)other.value=e.target.value};
+  exp.append(row);
+ });
+ root.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>{const x=active.get(b.dataset.toggle);if(!x)return;if(x.audio.paused)x.audio.play().catch(()=>{});else x.audio.pause();renderMixer()});
+ document.querySelectorAll('#activeAudios [data-stop],#expandedMixer [data-stop]').forEach(b=>b.onclick=()=>stopAudio(b.dataset.stop));
+}
+$('#pauseAll').onclick=()=>{active.forEach(x=>x.audio.pause());renderMixer()};
+$('#stopAll').onclick=()=>{[...active.keys()].forEach(stopAudio)};
+$('#expandMixer').onclick=()=>{$('#expandedMixer').classList.toggle('show');$('#expandMixer').textContent=$('#expandedMixer').classList.contains('show')?'⌄ Fechar mixer':'⌃ Mixer'};
+$('#musicFiles').onchange=e=>{importFiles(e.target.files,'music');e.target.value=''};$('#effectFiles').onchange=e=>{importFiles(e.target.files,'effect');e.target.value=''};$('#musicSearch').oninput=renderLibrary;
+$('#exportData').onclick=()=>{const data={version:1,sessions,exportedAt:new Date().toISOString()};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='neptus-backup.json';a.click();URL.revokeObjectURL(a.href)};
+$('#importData').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!Array.isArray(data.sessions))throw Error();sessions=data.sessions;persist();renderSessions();alert('Dados importados!')}catch{alert('Esse arquivo não parece ser um backup válido.')}};
+(async()=>{db=await openDB();loadMeta();const all=await getAudios();library=all.filter(x=>x.type==='music');effects=all.filter(x=>x.type==='effect');renderSessions();renderLibrary();renderEffects()})().catch(e=>alert('Não foi possível iniciar o armazenamento local: '+e.message));
+</script>
+</body></html>
